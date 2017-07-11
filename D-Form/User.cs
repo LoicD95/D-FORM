@@ -15,6 +15,6 @@ namespace D_Form
             _name = name;
         }
 
-        public string Name => _name;
+        public string Name { get; set; }
     }
 }

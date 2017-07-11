@@ -8,6 +8,8 @@ namespace D_Form
 {
     public class OpenQuestion : QuestionBase
     {
-
+        public OpenQuestion(QuestionBase parent) : base(parent)
+        {
+        }
     }
 }

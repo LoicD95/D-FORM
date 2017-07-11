@@ -14,10 +14,25 @@ namespace D_Form
         readonly List<QuestionBase> _children;
         QuestionBase _parent;
 
-        protected QuestionBase(QuestionBase parent)
+        /// <summary>
+        /// Initializer for <see cref="QuestionRoot"/>: there is no parent.
+        /// This is internal so that external implementations must use the 
+        /// constructor that requires a non null initial parent.
+        /// </summary>
+        internal QuestionBase()
         {
-            _parent = parent;
             _children = new List<QuestionBase>();
+        }
+
+        /// <summary>
+        /// Initializes a question with an initial parent.
+        /// </summary>
+        /// <param name="parent">The initial parent. Must not be null.</param>
+        protected QuestionBase(QuestionBase parent)
+            : this()
+        {
+            if (parent == null) throw new ArgumentNullException(nameof(parent));
+            _parent = parent;
         }
 
         /// <summary>
@@ -45,6 +60,8 @@ namespace D_Form
             }
         }
 
+        internal protected abstract AnswerBase CreateAnswer();
+
         public QuestionBase AddChild(string questionType)
         {
             Type tQuestion = Type.GetType(questionType);
@@ -71,7 +88,7 @@ namespace D_Form
             set
             {
                 if (_parent == null) throw new InvalidOperationException("Parent is required.");
-                if (value < 0 || value >= _parent._children.Count)
+                if (value < 0 || value > _parent._children.Count)
                 {
                     throw new ArgumentOutOfRangeException();
                 }

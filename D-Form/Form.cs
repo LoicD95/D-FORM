@@ -8,27 +8,46 @@ namespace D_Form
 {
     public class Form
     {
-        private Section _section;
-        private string _title;
-        private List<AnswerBase> _answers;
+        readonly QuestionRoot _root;
+        readonly Dictionary<string, FormAnswer> _answers;
 
         public Form()
         {
-           
+            _root = new QuestionRoot(this);
+            _answers = new Dictionary<string, FormAnswer>();
         }
 
-        public Section Section => _section;
-
+        /// <summary>
+        /// Gets or sets the title of this form: it is the same as the <see cref="Questions"/> title.
+        /// </summary>
         public string Title
         {
-            get => _title;
-            set => _title = value;
+            get => _root.Title;
+            set => _root.Title = value;
         }
 
-        public FormAnswer FinOrCreateAnswer(string userName)
+        public QuestionRoot Questions => _root;
+
+        public FormAnswer FindAnswers(string userName)
         {
-            FormAnswer n = new FormAnswer(userName);
-            return n;
+            FormAnswer a;
+            _answers.TryGetValue(userName, out a);
+            return a;
+        }
+
+        public FormAnswer FindOrCreateAnswers(string userName)
+        {
+            FormAnswer a;
+            if (!_answers.TryGetValue(userName, out a)) a = CreateAnswers(userName);
+            return a;
+        }
+
+        public FormAnswer CreateAnswers(string userName)
+        {
+            if (string.IsNullOrWhiteSpace(userName)) throw new ArgumentNullException(nameof(userName));
+            FormAnswer a = new FormAnswer(this, userName);
+            _answers.Add(userName, a);
+            return a;
         }
     }
 }

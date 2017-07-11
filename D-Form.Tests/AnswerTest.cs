@@ -18,8 +18,18 @@ namespace D_Form.Tests
             f.Title = "yo";
             Assert.AreEqual(f.Title, "yo");
 
-            FormAnswer a = f.FinOrCreateAnswer("Loïc");
+        }
+
+        [Test]
+        public void Find_Or_Create_Answer()
+        {
+            Form f = new Form();
+            User u = new User("Sabrina");
+
+            FormAnswer a = f.FindOrCreateAnswer("Sabrina");
             Assert.IsNotNull(a);
+            FormAnswer b = f.FindOrCreateAnswer("Sabrina");
+            Assert.AreSame(a,b);
 
         }
     }
